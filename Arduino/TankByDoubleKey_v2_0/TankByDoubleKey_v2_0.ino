@@ -137,7 +137,7 @@ void ACTION_NO_COMMAND() {
 void ACTION_COMMAND_UP() {
   Serial.println("COMMAND_UP");
 #ifdef BY_SERIAL
-  digitalWrite(UP, HIGH);
+  digitalWrite(UP, w);
 #endif //BY_SERIAL
 #ifdef BY_NRF
   digitalWrite(in1, LOW);
