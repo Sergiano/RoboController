@@ -21,6 +21,15 @@ namespace RoboController
     {
         private Connector _connector= new Connector();
         private TankCommand _currentCommand = TankCommand.NO_COMMAND;
+
+        public bool IsConnected
+        {
+            get
+            {
+                return _connector.IsConnected;
+            }
+        }
+
         public TankController(string portName)
         {
             _connector.ConnectToPort(portName);
@@ -28,7 +37,7 @@ namespace RoboController
 
         public void SetCommand(TankCommand tankCommand)
         {
-            if (tankCommand != _currentCommand)
+            if (tankCommand != _currentCommand && IsConnected)
             {
                 _currentCommand = tankCommand;
 

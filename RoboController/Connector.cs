@@ -13,7 +13,15 @@ namespace RoboController
         public const int portBaudRate = 9600;
         public Queue<string> messages = new Queue<string>();
 
-        private void initianalPort()
+        public bool IsConnected
+        {
+            get
+            {
+                return _continue;
+            }
+        }
+
+        private void InitianalPort()
         {
             _serialPort = new SerialPort();
             _continue = false;
@@ -21,7 +29,7 @@ namespace RoboController
 
         public void ConnectToPort(string portName)
         {
-            initianalPort();
+            InitianalPort();
             TryClosePort();
             readThread = new Thread(Read);
             _serialPort.PortName = SetPortName(portName);
