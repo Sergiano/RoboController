@@ -9,9 +9,9 @@ namespace RoboController
     {
         private SerialPort _serialPort;
         private bool _continue = false;
-        private Thread readThread;
-        public const int portBaudRate = 9600;
-        public Queue<string> messages = new Queue<string>();
+        private Thread _readThread;
+        public const int PortBaudRate = 9600;
+        public Queue<string> Messages = new Queue<string>();
 
         public bool IsConnected
         {
@@ -31,22 +31,22 @@ namespace RoboController
         {
             InitianalPort();
             TryClosePort();
-            readThread = new Thread(Read);
+            _readThread = new Thread(Read);
             _serialPort.PortName = SetPortName(portName);
-            _serialPort.BaudRate = portBaudRate;
+            _serialPort.BaudRate = PortBaudRate;
             _serialPort.ReadTimeout = 500;
             _serialPort.WriteTimeout = 500;
 
             _serialPort.Open();
             _continue = true;
-            readThread.Start();
+            _readThread.Start();
         }
 
         public void TryClosePort()
         {
             if (_continue)
             {
-                readThread.Join();
+                _readThread.Join();
                 _serialPort.Close();
                 _continue = false;
             }
@@ -68,7 +68,7 @@ namespace RoboController
                 try
                 {
                     string message = _serialPort.ReadLine();
-                    messages.Enqueue(message);
+                    Messages.Enqueue(message);
                 }
                 catch (TimeoutException) { }
             }
@@ -76,9 +76,9 @@ namespace RoboController
 
         public string GetMessage()
         {
-            if (messages.Count > 0)
+            if (Messages.Count > 0)
             {
-                return messages.Dequeue();
+                return Messages.Dequeue();
             }
             else
             {
