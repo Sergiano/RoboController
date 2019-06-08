@@ -79,9 +79,6 @@ void init_pins() {
   pinMode(in7, OUTPUT);      // устанавливает режим работы - выход
 }
 
-void set_no_command_all() {
-}
-
 void ACTION_NO_COMMAND() {
   digitalWrite(in1, LOW);
   digitalWrite(in2, LOW);
@@ -243,7 +240,6 @@ void init_nrf() {
 }
 
 void setup() {
-     
 #ifdef BY_SERIAL
   Serial.begin(9600);
 #endif
@@ -252,7 +248,6 @@ void setup() {
 #endif //BYNRF
   init_pins();
   fixedPinsControl();
-  set_no_command_all();
 }
 
 void loop() {
