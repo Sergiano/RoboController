@@ -14,22 +14,6 @@
 #define BY_NRF
 #endif //!BY_SERIAL
 
-#ifdef BY_SERIAL
-//пины для ключа
-#define UP 2//3
-#define DOWN 3//9
-#define LEFT 5//2
-#define RIGTH 4//8
-#define TURRET_LEFT 9//11
-#define TURRET_RIGHT 8//4
-//для выстрела нужно зажать 2 кнопки(в данный момент не используется)
-#define FIRE_ONE 6
-#define FIRE_TWO 7
-#define MOVE_GUN 10
-#endif //BY_SERIAL
-
-
-#ifdef BY_NRF
 #define in1 4
 #define in2 5
 #define in3 6
@@ -37,7 +21,7 @@
 #define in5 3
 #define in6 2
 #define in7 8
-#endif //BY_NRF
+
 //========================================//
 //=============== Команды ================//
 //========================================//
@@ -82,21 +66,9 @@ byte incomingByte = 0;
 RF24 radio(9, 10); // "создать" модуль радиопередачи на пинах 9 и 10 Для Уно
 //RF24 radio(9,53); // для Меги
 
-byte address[][6] = {"1Node", "2Node", "3Node", "4Node", "5Node", "6Node"}; //возможные номера труб
+byte address[][6] = {"1Node", "2Node", "3Node", "4Node", "5Node", "6Node"}; //возможные номера приёмников
 
 void init_pins() {
-#ifdef BY_SERIAL
-  pinMode(UP, OUTPUT);
-  pinMode(DOWN, OUTPUT);
-  pinMode(LEFT, OUTPUT);
-  pinMode(RIGTH, OUTPUT);
-  pinMode(TURRET_LEFT, OUTPUT);
-  pinMode(TURRET_RIGHT, OUTPUT);
-  pinMode(FIRE_ONE, OUTPUT);
-  pinMode(FIRE_TWO, OUTPUT);
-  pinMode(MOVE_GUN, OUTPUT);
-#endif //BY_SERIAL
-#ifdef BY_NRF
   pinMode(in1, OUTPUT);      // устанавливает режим работы - выход
   pinMode(in2, OUTPUT);      // устанавливает режим работы - выход
   pinMode(in3, OUTPUT);      // устанавливает режим работы - выход
@@ -105,26 +77,12 @@ void init_pins() {
   pinMode(in5, OUTPUT);      // устанавливает режим работы - выход
   pinMode(in6, OUTPUT);      // устанавливает режим работы - выход
   pinMode(in7, OUTPUT);      // устанавливает режим работы - выход
-#endif //BY_NRF
 }
 
 void set_no_command_all() {
 }
 
 void ACTION_NO_COMMAND() {
-#ifdef BY_SERIAL
-  digitalWrite(UP, LOW);
-  digitalWrite(DOWN, LOW);
-  digitalWrite(LEFT, LOW);
-  digitalWrite(RIGTH, LOW);
-  digitalWrite(TURRET_LEFT, LOW);
-  digitalWrite(TURRET_RIGHT, LOW);
-  digitalWrite(FIRE_ONE, LOW);
-  digitalWrite(FIRE_TWO, LOW);
-  digitalWrite(MOVE_GUN, LOW);
-  Serial.println("NO_COMMAND");
-#endif //BY_SERIAL
-#ifdef BY_NRF
   digitalWrite(in1, LOW);
   digitalWrite(in2, LOW);
   digitalWrite(in3, LOW);
@@ -132,109 +90,92 @@ void ACTION_NO_COMMAND() {
   digitalWrite(in5, LOW);
   digitalWrite(in6, LOW);
   digitalWrite(in7, LOW);
-#endif //BY_NRF
 }
-void ACTION_COMMAND_UP() {
-  Serial.println("COMMAND_UP");
-#ifdef BY_SERIAL
-  digitalWrite(UP, w);
-#endif //BY_SERIAL
-#ifdef BY_NRF
-  digitalWrite(in1, LOW);
-  digitalWrite(in2, HIGH);
-  digitalWrite(in3, HIGH);
-  digitalWrite(in4, LOW);
-  digitalWrite(in5, LOW);
-  digitalWrite(in6, LOW);
-  digitalWrite(in7, LOW);
-#endif //BY_NRF
-}
-void ACTION_COMMAND_DOWN() {
-  Serial.println("COMMAND_DOWN");
-#ifdef BY_SERIAL
-  digitalWrite(DOWN, HIGH);
-#endif //BY_SERIAL
-#ifdef BY_NRF
-  digitalWrite(in1, HIGH);
-  digitalWrite(in2, LOW);
-  digitalWrite(in3, LOW);
-  digitalWrite(in4, HIGH);
-  digitalWrite(in5, LOW);
-  digitalWrite(in6, LOW);
-  digitalWrite(in7, LOW);
-#endif //BY_NRF
-}
-void ACTION_COMMAND_LEFT() {
-  Serial.println("COMMAND_LEFT");
-#ifdef BY_SERIAL
-  digitalWrite(LEFT, HIGH);
-#endif //BY_SERIAL
-#ifdef BY_NRF
-  digitalWrite(in1, LOW);
-  digitalWrite(in2, HIGH);
-  digitalWrite(in3, LOW);
-  digitalWrite(in4, HIGH);
-  digitalWrite(in5, LOW);
-  digitalWrite(in6, LOW);
-  digitalWrite(in7, LOW);
-#endif //BY_NRF
-}
-void ACTION_COMMAND_RIGTH() {
-  Serial.println("COMMAND_RIGTH");
-#ifdef BY_SERIAL
-  digitalWrite(RIGTH, HIGH);
-#endif //BY_SERIAL
-#ifdef BY_NRF
-  
-  digitalWrite(in1, HIGH);
-  digitalWrite(in2, LOW);
-  digitalWrite(in3, HIGH);
-  digitalWrite(in4, LOW);
-  digitalWrite(in5, LOW);
-  digitalWrite(in6, LOW);
-  digitalWrite(in7, LOW);
-#endif //BY_NRF
-}
-void ACTION_COMMAND_TURRET_LEFT() {
-  Serial.println("COMMAND_TURRET_LEFT");
-#ifdef BY_SERIAL
-  digitalWrite(TURRET_LEFT, HIGH);
-#endif //BY_SERIAL
-#ifdef BY_NRF
 
+void ACTION_COMMAND_UP() {
+#ifdef BY_SERIAL
+  Serial.println("COMMAND_UP");
+#endif //BY_SERIAL
+
+  digitalWrite(in1, LOW);
+  digitalWrite(in2, HIGH);
+  digitalWrite(in3, HIGH);
+  digitalWrite(in4, LOW);
+  digitalWrite(in5, LOW);
+  digitalWrite(in6, LOW);
+  digitalWrite(in7, LOW);
+}
+
+void ACTION_COMMAND_DOWN() {
+#ifdef BY_SERIAL
+  Serial.println("COMMAND_DOWN");
+#endif //BY_SERIAL
+  digitalWrite(in1, HIGH);
+  digitalWrite(in2, LOW);
+  digitalWrite(in3, LOW);
+  digitalWrite(in4, HIGH);
+  digitalWrite(in5, LOW);
+  digitalWrite(in6, LOW);
+  digitalWrite(in7, LOW);
+}
+
+void ACTION_COMMAND_LEFT() {
+#ifdef BY_SERIAL
+  Serial.println("COMMAND_LEFT");
+#endif //BY_SERIAL
+  digitalWrite(in1, LOW);
+  digitalWrite(in2, HIGH);
+  digitalWrite(in3, LOW);
+  digitalWrite(in4, HIGH);
+  digitalWrite(in5, LOW);
+  digitalWrite(in6, LOW);
+  digitalWrite(in7, LOW);
+}
+
+void ACTION_COMMAND_RIGTH() {
+#ifdef BY_SERIAL
+  Serial.println("COMMAND_RIGTH");
+#endif //BY_SERIAL
+  digitalWrite(in1, HIGH);
+  digitalWrite(in2, LOW);
+  digitalWrite(in3, HIGH);
+  digitalWrite(in4, LOW);
+  digitalWrite(in5, LOW);
+  digitalWrite(in6, LOW);
+  digitalWrite(in7, LOW);
+}
+
+void ACTION_COMMAND_TURRET_LEFT() {
+#ifdef BY_SERIAL
+  Serial.println("COMMAND_TURRET_LEFT");
+#endif //BY_SERIAL
   digitalWrite(in1, LOW);
   digitalWrite(in2, LOW);
   digitalWrite(in3, LOW);
   digitalWrite(in4, LOW);
   digitalWrite(in5, LOW);
   digitalWrite(in6, HIGH);
-#endif
 }
+
 void ACTION_COMMAND_TURRET_RIGHT() {
-  Serial.println("COMMAND_TURRET_RIGHT");
 #ifdef BY_SERIAL
-  digitalWrite(TURRET_RIGHT, HIGH);
+  Serial.println("COMMAND_TURRET_RIGHT");
 #endif //BY_SERIAL
-#ifdef BY_NRF
   digitalWrite(in6, LOW);
   digitalWrite(in5, HIGH);
-#endif
 }
+
 void ACTION_COMMAND_FIRE() {
-  Serial.println("COMMAND_FIRE");
 #ifdef BY_SERIAL
-  digitalWrite(FIRE_ONE, HIGH);
-  digitalWrite(FIRE_TWO, HIGH);
+  Serial.println("COMMAND_FIRE");
 #endif //BY_SERIAL
 }
+
 void ACTION_COMMAND_MOVE_GUN() {
-  Serial.println("COMMAND_MOVE_GUN");
 #ifdef BY_SERIAL
-  digitalWrite(MOVE_GUN, HIGH);
+  Serial.println("COMMAND_MOVE_GUN");
 #endif //BY_SERIAL
-#ifdef BY_NRF
   digitalWrite(in7, HIGH);
-#endif
 }
 
 void set_command(int command) {
@@ -289,7 +230,7 @@ void init_nrf() {
   radio.enableAckPayload();    //разрешить отсылку данных в ответ на входящий сигнал
   radio.setPayloadSize(32);     //размер пакета, в байтах
 
-  radio.openReadingPipe(1, address[0]);     //хотим слушать трубу 0
+  radio.openReadingPipe(1, address[0]);     //хотим слушать приёмник 0
   radio.setChannel(0x60);  //выбираем канал (в котором нет шумов!)
 
   radio.setPALevel (RF24_PA_MAX); //уровень мощности передатчика. На выбор RF24_PA_MIN, RF24_PA_LOW, RF24_PA_HIGH, RF24_PA_MAX
@@ -302,18 +243,16 @@ void init_nrf() {
 }
 
 void setup() {
+     
+#ifdef BY_SERIAL
   Serial.begin(9600);
+#endif
 #ifdef BY_NRF
   init_nrf();
 #endif //BYNRF
   init_pins();
   fixedPinsControl();
   set_no_command_all();
-}
-
-byte readCommandByte() {
-#ifdef BY_SERIAL
-#endif
 }
 
 void loop() {
@@ -325,11 +264,12 @@ void loop() {
     Serial.print("Recieved: "); Serial.println(gotByte);
     incomingByte = gotByte;
 #endif //BY_NRF 
+       
 #ifdef BY_SERIAL
     while (Serial.available() <= 0) {
       incomingByte = Serial.read();
 #endif //BY_SERIAL 
-      //Serial.println(incomingByte);
+         
       switch (incomingByte) {
         case KEY_W:
           set_command(COMMAND_UP);
