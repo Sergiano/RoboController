@@ -99,13 +99,17 @@ void ALL_PINS_LOW() {
   digitalWrite(in5, LOW);
 }
 
-void setup() {
-  Serial.begin(9600);
+void init_pins() {
   pinMode(in1, OUTPUT);      // устанавливает режим работы - выход
   pinMode(in2, OUTPUT);      // устанавливает режим работы - выход
   pinMode(in3, OUTPUT);      // устанавливает режим работы - выход
   pinMode(in4, OUTPUT);      // устанавливает режим работы - выход
   pinMode(in5, OUTPUT);      // устанавливает режим работы - выход
+}
+
+void setup() {
+  Serial.begin(9600);
+  init_pins();
 }
 
 void loop() {
