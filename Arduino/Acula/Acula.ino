@@ -47,71 +47,60 @@ byte incomingByte = 0;
 void set_command(int Comand) {
   switch (Comand) {
     case  COMMAND_UP:
-      comandUp();
+      ACTION_COMMAND_UP();
       break;
     case  COMMAND_DOWN:
-      comandDown();
+       ACTION_COMMAND_DOWN();
       break;
     case COMMAND_LEFT:
-      comandLeft();
+      ACTION_COMMAND_LEFT();
       break;
     case  COMMAND_RIGTH:
-      comandRigth();
+       ACTION_COMMAND_RIGTH();
       break;
     case  NO_COMMAND:
-      noCommand();
+      ACTION_NO_COMMAND();
       break;
     default:
       break;
   }
 }
 
-void comandUp() {
-  digitalWrite(in1, LOW);
+void ACTION_COMMAND_UP() {
+  ALL_PINS_LOW(); digitalWrite(in1, LOW);
   digitalWrite(in2, HIGH);
-  digitalWrite(in3, LOW);
-  digitalWrite(in4, LOW);
-  digitalWrite(in5, LOW);
 }
 
-void comandDown() {
+void ACTION_COMMAND_DOWN() {
+  ALL_PINS_LOW();
   digitalWrite(in1, HIGH);
-  digitalWrite(in2, LOW);
-  digitalWrite(in3, LOW);
-  digitalWrite(in4, LOW);
-  digitalWrite(in5, LOW);
 }
 
-void comandLeft() {
-  digitalWrite(in1, LOW);
-  digitalWrite(in2, LOW);
-  digitalWrite(in3, LOW);
+void ACTION_COMMAND_LEFT() {
+  ALL_PINS_LOW();
   digitalWrite(in4, HIGH);
-  digitalWrite(in5, LOW);
 }
 
-void comandRigth() {
-  digitalWrite(in1, LOW);
-  digitalWrite(in2, LOW);
+void ACTION_COMMAND_RIGTH() {
+  ALL_PINS_LOW();
   digitalWrite(in3, HIGH);
-  digitalWrite(in4, LOW);
-  digitalWrite(in5, LOW);
 }
 
-void noCommand() {
-  digitalWrite(in1, LOW);
-  digitalWrite(in2, LOW);
-  digitalWrite(in3, LOW);
-  digitalWrite(in4, LOW);
+void ACTION_NO_COMMAND() {
+  ALL_PINS_LOW();
   digitalWrite(in5, HIGH);
 }
 
-void setup() {
+void ALL_PINS_LOW() {
   pinMode(in1, OUTPUT);      // устанавливает режим работы - выход
   pinMode(in2, OUTPUT);      // устанавливает режим работы - выход
   pinMode(in3, OUTPUT);      // устанавливает режим работы - выход
   pinMode(in4, OUTPUT);      // устанавливает режим работы - выход
   pinMode(in5, OUTPUT);      // устанавливает режим работы - выход
+}
+
+void setup() {
+  ALL_PINS_LOW();
 }
 
 void loop() {
