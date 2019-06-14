@@ -46,17 +46,17 @@ byte incomingByte = 0;
 
 void set_command(int Comand) {
   switch (Comand) {
-    case  COMMAND_UP:
+    case COMMAND_UP:
       ACTION_COMMAND_UP();
       break;
-    case  COMMAND_DOWN:
-       ACTION_COMMAND_DOWN();
+    case COMMAND_DOWN:
+      ACTION_COMMAND_DOWN();
       break;
     case COMMAND_LEFT:
       ACTION_COMMAND_LEFT();
       break;
     case  COMMAND_RIGTH:
-       ACTION_COMMAND_RIGTH();
+      ACTION_COMMAND_RIGTH();
       break;
     case  NO_COMMAND:
       ACTION_NO_COMMAND();
@@ -67,7 +67,7 @@ void set_command(int Comand) {
 }
 
 void ACTION_COMMAND_UP() {
-  ALL_PINS_LOW(); digitalWrite(in1, LOW);
+  ALL_PINS_LOW();
   digitalWrite(in2, HIGH);
 }
 
@@ -92,15 +92,20 @@ void ACTION_NO_COMMAND() {
 }
 
 void ALL_PINS_LOW() {
+  digitalWrite(in1, LOW);
+  digitalWrite(in2, LOW);
+  digitalWrite(in3, LOW);
+  digitalWrite(in5, LOW);
+  digitalWrite(in5, LOW);
+}
+
+void setup() {
+  Serial.begin(9600);
   pinMode(in1, OUTPUT);      // устанавливает режим работы - выход
   pinMode(in2, OUTPUT);      // устанавливает режим работы - выход
   pinMode(in3, OUTPUT);      // устанавливает режим работы - выход
   pinMode(in4, OUTPUT);      // устанавливает режим работы - выход
   pinMode(in5, OUTPUT);      // устанавливает режим работы - выход
-}
-
-void setup() {
-  ALL_PINS_LOW();
 }
 
 void loop() {
