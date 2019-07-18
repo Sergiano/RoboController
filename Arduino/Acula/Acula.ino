@@ -102,6 +102,11 @@ void init_pins() {
   pinMode(in4, OUTPUT);      // устанавливает режим работы - выход
   pinMode(in5, OUTPUT);      // устанавливает режим работы - выход
 
+  ACTION_COMMAND_UP();
+  ACTION_COMMAND_DOWN();
+  ACTION_COMMAND_LEFT();
+  ACTION_COMMAND_RIGTH();
+  
   ALL_PINS_LOW();
 }
 
