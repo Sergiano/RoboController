@@ -1,152 +1,82 @@
-#include <SPI.h>
-#include "nRF24L01.h"
-#include "RF24.h"
+#define ALL_DOWN  PORTB=0   // все пины вниз
+#define D8        PORTB=1   // пин наклона вниз 
+#define D9        PORTB=2   // пин наклона вверх
+#define D10       PORTB=4   // пин махов хвостом
+#define D11       PORTB=8   // пин поворота влево
+#define D12       PORTB=16  // пин поворта вправо
 
-//========================================//
-//=========== Пины управления ============//
-//========================================//
-#define in1 2 //down
-#define in2 3 //up
-#define in3 4 //right
-#define in4 5 //left
-#define in5 6 //no comand
+#define DELAY_W   3000      ///////////////////////////////////
+#define DELAY_S   3000      //                               //
+#define DELAY_R   6000      //   ПРОДОЛЖИТЕЛЬНОСТЬ КОМАНД    //
+#define DELAY_A   1000      //                               //
+#define DELAY_D   1000      ///////////////////////////////////
 
-//========================================//
-//=============== Команды ================//
-//========================================//
-#define NO_COMMAND 0
-#define COMMAND_UP 1
-#define COMMAND_DOWN 2
-#define COMMAND_LEFT 3
-#define COMMAND_RIGTH 4
+#define ACTION_X  ALL_DOWN  //////////////////////////////////// 
+#define ACTION_W  D8        //                                //
+#define ACTION_S  D9        //  СООТВЕТСТВИЕ ПИНОВ И КОМАНД   //
+#define ACTION_R  D10       //                                //
+#define ACTION_A  D11       //                                //
+#define ACTION_D  D12       ////////////////////////////////////
 
-#define END_LINE 10
-//бит, означающий малые буквы стандартного управления WASD(перемещение)+QE(башня)+пробел(стрельба)+R(перезарядка)
-#define KEY_W 119
-#define KEY_A 97
-#define KEY_S 115
-#define KEY_D 100
-#define KEY_Q 113
-#define KEY_E 101
-#define KEY_R 114
-#define KEY_X 120
-#define KEY_SPACE 32
-#define KEY_C 99
+#define KEY_X     120
+#define KEY_W     119
+#define KEY_S     115
+#define KEY_R     114
+#define KEY_A     97
+#define KEY_D     100
 
-//========================================//
-//========== Данные и переменные =========//
-//========================================//
-//команды управления
-int last_command = NO_COMMAND;
-byte incomingByte = 0;
+byte incomingByte;
 
-void set_command(int comand) {
-  switch (comand) {
-    case COMMAND_UP:
-      ACTION_COMMAND_UP();
-      break;
-    case COMMAND_DOWN:
-      ACTION_COMMAND_DOWN();
-      break;
-    case COMMAND_LEFT:
-      ACTION_COMMAND_LEFT();
-      break;
-    case  COMMAND_RIGTH:
-      ACTION_COMMAND_RIGTH();
-      break;
-    case  NO_COMMAND:
-      ACTION_NO_COMMAND();
-      break;
-    default:
-      break;
-  }
-}
-
-void ACTION_COMMAND_UP() {
-  ALL_PINS_LOW();
-  digitalWrite(in2, HIGH);
-}
-
-void ACTION_COMMAND_DOWN() {
-  ALL_PINS_LOW();
-  digitalWrite(in1, HIGH);
-}
-
-void ACTION_COMMAND_LEFT() {
-  ALL_PINS_LOW();
-  digitalWrite(in4, HIGH);
-}
-
-void ACTION_COMMAND_RIGTH() {
-  ALL_PINS_LOW();
-  digitalWrite(in3, HIGH);
-}
-
-void ACTION_NO_COMMAND() {
-  ALL_PINS_LOW();
-  digitalWrite(in5, HIGH);
-}
-
-void ALL_PINS_LOW() {
-  digitalWrite(in1, LOW);
-  digitalWrite(in2, LOW);
-  digitalWrite(in3, LOW);
-  digitalWrite(in5, LOW);
-  digitalWrite(in5, LOW);
-}
-
-void init_pins() {
-  pinMode(in1, OUTPUT);      // устанавливает режим работы - выход
-  pinMode(in2, OUTPUT);      // устанавливает режим работы - выход
-  pinMode(in3, OUTPUT);      // устанавливает режим работы - выход
-  pinMode(in4, OUTPUT);      // устанавливает режим работы - выход
-  pinMode(in5, OUTPUT);      // устанавливает режим работы - выход
-
-  ACTION_COMMAND_UP();
-  ACTION_COMMAND_DOWN();
-  ACTION_COMMAND_LEFT();
-  ACTION_COMMAND_RIGTH();
-  
-  ALL_PINS_LOW();
-}
-
-void setup() {
+void setup() 
+{
+  DDRB = B00011111; // D8..D12 на выход
+  ACTION_X;
   Serial.begin(9600);
-  init_pins();
 }
 
-void loop() {
-  if (Serial.available() <= 0) {
+void loop() 
+{
+  if (Serial.available() > 0)
+  {
     incomingByte = Serial.read();
-  }
-  if (last_command != incomingByte) {
-    last_command = incomingByte;
-    switch (last_command) {
-      case KEY_W: {
-          set_command(COMMAND_UP);
-          break;
-        }
-      case KEY_A: {
-          set_command(COMMAND_LEFT);
-        }
-      case KEY_S: {
-          set_command(COMMAND_DOWN);
-          break;
-        }
-      case KEY_D: {
-          set_command(COMMAND_RIGTH);
-          break;
-        }
-      case KEY_X: {
-          set_command(NO_COMMAND);
-          break;
-        }
-      case KEY_R: {
-          set_command(NO_COMMAND);
-          break;
-        }
-      default:
+    
+    switch (incomingByte)
+    {        
+      case KEY_W:
+        ACTION_W;
+        delay(DELAY_W);
+        ACTION_X;
         break;
-    }
+      case KEY_S:
+        ACTION_S;
+        delay(DELAY_S);
+        ACTION_X;          
+        break;
+      case KEY_A:
+        ACTION_A;
+        delay(DELAY_A);
+        ACTION_X;
+        break;
+      case KEY_D:
+        ACTION_D;
+        delay(DELAY_D);
+        ACTION_X;
+        break; 
+      case KEY_R:
+        ACTION_R;
+        delay(100);
+        ACTION_X;
+        delay(DELAY_R);
+        ACTION_R;
+        delay(100);
+        ACTION_X;
+        break;  
+      /*case KEY_X:      
+        break; 
+        default:
+        break;*/    
+    }  
+
+    while (Serial.available()) Serial.read();
   }
 }
